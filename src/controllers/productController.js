@@ -1,9 +1,9 @@
-import productModel from "../models/productModel.js";
+import ProductModel from "../models/ProductModel.js";
 
 // GET /products
 export const getAllProduct = async (req, res) => {
   try {
-    var data = await productModel.find();
+    var data = await ProductModel.find();
     return res.status(201).json(data);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -12,7 +12,7 @@ export const getAllProduct = async (req, res) => {
 // GET /products/:id
 export const getProductByParamID = async (req, res) => {
   try {
-    const data = await productModel.findById(req.params.id);
+    const data = await ProductModel.findById(req.params.id);
     if (!data) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -25,7 +25,7 @@ export const getProductByParamID = async (req, res) => {
 export const getProductByQueryID = async (req, res) => {
   try {
     const productId = req.query.id;
-    const data = await productModel.findOne({ id: productId });
+    const data = await ProductModel.findOne({ id: productId });
     if (!data) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -49,7 +49,7 @@ export const getProduct = async (req, res) => {
 };
 // POST /products
 export const insertProduct = async (req, res) => {
-  const product = new productModel({
+  const product = new ProductModel({
     id: req.body.id,
     name: req.body.name,
     description: req.body.description,
@@ -73,7 +73,7 @@ export const insertProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   const productId = req.body.id;
   try {
-    const updatedProduct = await productModel.findOneAndUpdate(
+    const updatedProduct = await ProductModel.findOneAndUpdate(
       { id: productId },
       req.body,
       { new: true }
@@ -89,7 +89,7 @@ export const updateProduct = async (req, res) => {
 // DELETE /products/:id
 export const deleteProductByParamId = async (req, res) => {
   try {
-    const product = await productModel.findByIdAndDelete(req.params.id);
+    const product = await ProductModel.findByIdAndDelete(req.params.id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -102,7 +102,7 @@ export const deleteProductByParamId = async (req, res) => {
 export const deleteProductByQueryId = async (req, res) => {
   const productId = req.query.id;
   try {
-    const product = await productModel.findOneAndDelete({ id: productId });
+    const product = await ProductModel.findOneAndDelete({ id: productId });
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }

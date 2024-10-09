@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
-const productSchema = new Schema(
+const cartSchema = new Schema(
   {
-    id: {
+    itemId: {
       type: String,
       unique: true,
       require: true,
@@ -13,15 +13,19 @@ const productSchema = new Schema(
       //   message: (props) => `${props.value} is not a valid Person ID!`,
       // },
     },
-    name: {
+    orderId: {
       type: String,
       require: true,
     },
-    description: {
+    quantity: {
+      type: Number,
+      min: 1,
+    },
+    status: {
       type: String,
       require: true,
     },
-    category: {
+    productName: {
       type: String,
       require: true,
     },
@@ -30,31 +34,17 @@ const productSchema = new Schema(
       require: true,
       min: 0,
     },
-    quantity: {
-      type: Number,
-      require: true,
-      min: 0,
-    },
-    discount: {
-      type: Number,
-      min: 0,
-      default: 0,
-    },
-    stockQuantity: {
-      //so luong ton
-      type: Number,
-      min: 0,
-    },
     image: {
       type: String,
       require: true,
     },
-    brand: {
-      type: String,
+    discount: {
+      type: Number,
+      min: 0,
       require: true,
     },
   },
   { timestamps: true, versionKey: false }
 );
 
-export default mongoose.model("ProductModel", productSchema, "product");
+export default mongoose.model("CartModel", cartSchema, "cart");
