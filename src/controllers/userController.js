@@ -21,6 +21,19 @@ export const getUserById = async (req, res) => {
   }
 };
 
+export const getUserByQueryId = async (req, res) => {
+    try {
+      const { id } = req.query; // Lấy id từ query
+      const user = await User.findById(id).populate("location"); // Tìm người dùng theo id
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      res.json(user);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  };
+
 // Tạo người dùng mới
 export const createUser = async (req, res) => {
   const user = new User(req.body);
@@ -58,3 +71,18 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+// Xóa người dùng theo query id
+export const deleteUserByQueryId = async (req, res) => {
+    try {
+      const { id } = req.query; // Lấy id từ query
+      const user = await User.findByIdAndDelete(id); // Tìm và xóa người dùng theo id
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      res.json({ message: "User deleted successfully" });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  };
+  
