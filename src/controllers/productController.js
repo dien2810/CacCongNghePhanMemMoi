@@ -1,6 +1,7 @@
 import ProductModel from "../models/ProductModel.js";
 
 // GET /products
+//chinh lai du lieu response ve phai co thuoc tinh total, data, limit, skip, sortBy
 export const getAllProduct = async (req, res) => {
   try {
     var data = await ProductModel.find();
@@ -48,6 +49,7 @@ export const getProduct = async (req, res) => {
   }
 };
 // POST /products
+// chinh lai response chi can co _id va name neu thanh tao thanh cong, k thi phai co error
 export const insertProduct = async (req, res) => {
   const product = new ProductModel({
     id: req.body.id,

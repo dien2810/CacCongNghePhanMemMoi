@@ -1,9 +1,9 @@
-import User from "../models/UserModel.js"; 
+import User from "../models/UserModel.js";
 
 // Lấy tất cả người dùng
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().populate("location"); // Giả sử có trường location
+    const users = await User.find(); // Giả sử có trường location
     res.json(users);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -13,7 +13,7 @@ export const getAllUsers = async (req, res) => {
 // Lấy người dùng theo ID
 export const getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).populate("location");
+    const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: "User not found" });
     res.json(user);
   } catch (err) {
@@ -22,17 +22,17 @@ export const getUserById = async (req, res) => {
 };
 
 export const getUserByQueryId = async (req, res) => {
-    try {
-      const { id } = req.query; // Lấy id từ query
-      const user = await User.findById(id).populate("location"); // Tìm người dùng theo id
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      res.json(user);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
+  try {
+    const { id } = req.query; // Lấy id từ query
+    const user = await User.findById(id); // Tìm người dùng theo id
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-  };
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
 // Tạo người dùng mới
 export const createUser = async (req, res) => {
@@ -74,15 +74,14 @@ export const deleteUser = async (req, res) => {
 
 // Xóa người dùng theo query id
 export const deleteUserByQueryId = async (req, res) => {
-    try {
-      const { id } = req.query; // Lấy id từ query
-      const user = await User.findByIdAndDelete(id); // Tìm và xóa người dùng theo id
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      res.json({ message: "User deleted successfully" });
-    } catch (err) {
-      res.status(500).json({ message: err.message });
+  try {
+    const { id } = req.query; // Lấy id từ query
+    const user = await User.findByIdAndDelete(id); // Tìm và xóa người dùng theo id
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-  };
-  
+    res.json({ message: "User deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
