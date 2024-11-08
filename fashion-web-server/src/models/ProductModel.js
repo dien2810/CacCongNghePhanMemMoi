@@ -2,19 +2,9 @@ import mongoose from "mongoose";
 import { Schema } from "mongoose";
 const productSchema = new Schema(
   {
-    id: {
-      type: String,
-      unique: true,
-      require: true,
-      // validate: {
-      //   validator: function (value) {
-      //     return Number.isInteger(value) || value == undefined;
-      //   },
-      //   message: (props) => `${props.value} is not a valid Person ID!`,
-      // },
-    },
     name: {
       type: String,
+      unique: true,
       require: true,
     },
     description: {
@@ -30,7 +20,7 @@ const productSchema = new Schema(
       require: true,
       min: 0,
     },
-    quantity: {
+    sellQuantity: {
       type: Number,
       require: true,
       min: 0,
@@ -58,3 +48,14 @@ const productSchema = new Schema(
 );
 
 export default mongoose.model("ProductModel", productSchema, "product");
+// id: {
+//   type: String,
+//   unique: true,
+//   require: true,
+//   // validate: {
+//   //   validator: function (value) {
+//   //     return Number.isInteger(value) || value == undefined;
+//   //   },
+//   //   message: (props) => `${props.value} is not a valid Person ID!`,
+//   // },
+// },

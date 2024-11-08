@@ -1,7 +1,11 @@
 import "../../assets/css/LandingPageHeader.css";
 import CartIcon from "../../components/CartIcon";
+import { useSelector } from "react-redux";
+import { getUser } from "../../redux/selectors";
+import { isEmptyObject } from "../../utils/index";
+import { Link } from "react-router-dom";
 function Header(props) {
-  //const user = useSelector(getUser);
+  const user = useSelector(getUser);
 
   return (
     <header className="landing-page-header">
@@ -37,6 +41,19 @@ function Header(props) {
         </ul>
         <div className="header-auth">
           <CartIcon style={{ width: "25px", height: "25px", color: "white" }} />
+          {function () {
+            if (user === null || isEmptyObject(user))
+              return (
+                <Link to="/login" className="button button-login">
+                  LOGIN
+                </Link>
+              );
+            return (
+              <Link to="/history">
+                <img src={user.image} alt="landingpage-avatar" />
+              </Link>
+            );
+          }.call(this)}
         </div>
       </div>
     </header>

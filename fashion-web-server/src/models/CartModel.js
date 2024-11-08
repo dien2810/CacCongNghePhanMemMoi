@@ -13,7 +13,7 @@ const cartSchema = new Schema(
       //   message: (props) => `${props.value} is not a valid Person ID!`,
       // },
     },
-    orderId: {
+    userId: {
       type: String,
       require: true,
     },

@@ -14,7 +14,7 @@ const ProductRouter = express.Router();
 ProductRouter.get("/:id", getProductByParamID);
 ProductRouter.get("/", getProduct);
 ProductRouter.post("/", insertProduct);
-ProductRouter.put("/", updateProduct);
+ProductRouter.put("/:id", updateProduct);
 ProductRouter.delete("/:id", deleteProductByParamId);
 ProductRouter.delete("/", deleteProductByQueryId);
 
