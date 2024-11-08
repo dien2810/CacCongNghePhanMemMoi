@@ -3,8 +3,52 @@ import CartModel from "../models/cartModel.js";
 // GET /cart
 export const getAllCartItem = async (req, res) => {
   try {
-    var data = await CartModel.find();
-    return res.status(201).json(data);
+    const userId = req.query.userId; // Lấy username từ query parameter
+    let limit = parseInt(req.query.limit) || 10; // Số sản phẩm tối đa mỗi trang (mặc định là 10)
+    let skip = parseInt(req.query.skip) || 0; // Số sản phẩm bỏ qua (pagination)
+    if (!userId) {
+      return res.status(400).json({ message: "userId is required" });
+    }
+
+    // Lấy danh sách sản phẩm trong giỏ hàng của người dùng
+    const itemsInCart = await CartModel.find({ userId })
+      .sort({ ["createdAt"]: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    if (!itemsInCart || itemsInCart.length === 0) {
+      return res.status(200).json({
+        totalItems: 0,
+        data: [],
+        totalPrice: 0,
+        user: userId,
+      });
+    }
+
+    // Tính tổng số lượng và tổng giá của toàn bộ giỏ hàng
+    const totalItems = itemsInCart.length;
+    let totalPrice = 0;
+
+    const data = itemsInCart.map((item) => {
+      const totalItemPrice = item.price * item.quantity;
+      totalPrice += totalItemPrice;
+
+      return {
+        itemId: item.itemId,
+        productName: item.productName,
+        quantity: item.quantity,
+        price: item.price,
+        totalPrice: totalItemPrice,
+        status: item.status,
+      };
+    });
+    // Trả về JSON với thông tin chi tiết
+    res.json({
+      totalItems,
+      data,
+      totalPrice,
+      user: userId,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -56,8 +100,6 @@ export const insertCartItem = async (req, res) => {
     status: req.body.status,
     productName: req.body.productName,
     price: req.body.price,
-    image: req.body.image,
-    stockQuantity: req.body.stockQuantity,
     image: req.body.image,
     discount: req.body.discount,
   });

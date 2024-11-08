@@ -3,8 +3,9 @@ import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../assets/css/CartIcon.css";
 import { useSelector } from "react-redux";
+import { getNumberOfItemsInCart } from "../redux/selectors.js";
 function CartIcon(props) {
-  //const count = useSelector(getNumberOfItemsInCart);
+  const count = useSelector(getNumberOfItemsInCart);
   return (
     <div>
       <Link to="/cart" style={{ position: "relative" }}>
@@ -13,10 +14,10 @@ function CartIcon(props) {
           icon={faCartShopping}
           style={props.style}
         />
-        {/*function () {
-					if (count !== 0)
-						return <div className='number-item-cart'>{count}</div>;
-				}.call(this)*/}
+        {function () {
+          if (count !== 0)
+            return <div className="number-item-cart">{count}</div>;
+        }.call(this)}
       </Link>
     </div>
   );

@@ -4,8 +4,40 @@ import ProductModel from "../models/ProductModel.js";
 //chinh lai du lieu response ve phai co thuoc tinh total, data, limit, skip, sortBy
 export const getAllProduct = async (req, res) => {
   try {
-    var data = await ProductModel.find();
-    return res.status(201).json(data);
+    let limit = parseInt(req.query.limit) || 10; // Số sản phẩm tối đa mỗi trang (mặc định là 10)
+    let skip = parseInt(req.query.skip) || 0; // Số sản phẩm bỏ qua (pagination)
+    let sortBy = req.query.sortBy || "new";
+    // Sắp xếp dựa trên sortBy
+    let sortField = "";
+    switch (sortBy) {
+      case "hot":
+        sortField = "sellQuantity";
+        break;
+      case "new":
+        sortField = "updatedAt";
+        break;
+      case "sale":
+        sortField = "discount";
+        break;
+      default:
+        sortField = "name"; // Mặc định nếu không truyền gì
+        break;
+    }
+
+    // Đếm tổng số sản phẩm
+    const total = await ProductModel.countDocuments();
+    var data = await ProductModel.find()
+      .sort({ [sortField]: -1 }) // Sắp xếp giảm dần
+      .skip(skip)
+      .limit(limit);
+
+    return res.status(201).json({
+      total,
+      data,
+      limit,
+      skip,
+      sortBy,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -25,7 +57,7 @@ export const getProductByParamID = async (req, res) => {
 // GET /products/?id=value
 export const getProductByQueryID = async (req, res) => {
   try {
-    const productId = req.query.id;
+    const productId = req.query._id;
     const data = await ProductModel.findOne({ id: productId });
     if (!data) {
       return res.status(404).json({ message: "Product not found" });
@@ -52,7 +84,6 @@ export const getProduct = async (req, res) => {
 // chinh lai response chi can co _id va name neu thanh tao thanh cong, k thi phai co error
 export const insertProduct = async (req, res) => {
   const product = new ProductModel({
-    id: req.body.id,
     name: req.body.name,
     description: req.body.description,
     category: req.body.category,
@@ -71,9 +102,10 @@ export const insertProduct = async (req, res) => {
   }
 };
 
-// PUT /products
+// PUT /products/:id
 export const updateProduct = async (req, res) => {
-  const productId = req.body.id;
+  const productId = req.params._id;
+  console.log(req.body);
   try {
     const updatedProduct = await ProductModel.findOneAndUpdate(
       { id: productId },
@@ -83,7 +115,10 @@ export const updateProduct = async (req, res) => {
     if (!updatedProduct) {
       return res.status(404).json({ message: "Product not found" });
     }
-    res.status(200).json(updatedProduct);
+    res.status(200).json({
+      id: updatedProduct.id,
+      name: updatedProduct.name,
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -102,7 +137,7 @@ export const deleteProductByParamId = async (req, res) => {
 };
 // DELETE /products/?id=value
 export const deleteProductByQueryId = async (req, res) => {
-  const productId = req.query.id;
+  const productId = req.query._id;
   try {
     const product = await ProductModel.findOneAndDelete({ id: productId });
     if (!product) {
