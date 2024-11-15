@@ -5,6 +5,7 @@ import ProductRouter from "./src/router/product_route.js";
 import CartRouter from "./src/router/cart_route.js";
 import UserRouter from "./src/router/user_route.js";
 import LocationRouter from "./src/router/location_route.js";
+import AuthenticationRouter from "./src/router/authentication_route.js";
 import cors from "cors";
 //Config
 const app = express();
@@ -23,6 +24,7 @@ app.use("/products", productRouter);
 app.use("/cart", cartRouter);
 app.use("/users", userRouter);
 app.use("/locations", locationRouter);
+app.use("/auth", AuthenticationRouter);
 app.get("/", (req, res) => {
   res.send("Hello World");
 });

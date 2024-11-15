@@ -8,11 +8,9 @@
 // import { useSelector } from 'react-redux';
 // import { getItemsInCart, getUser } from '../../redux/selectors';
 
-
 // function PurchasedPage() {
 //     const user = useSelector(getUser);
 //     const itemsInCart = useSelector(getItemsInCart);
-
 
 //     return (
 //         <div style={{ backgroundColor: 'var(--gray-color)' }}>
@@ -23,7 +21,7 @@
 //             {itemsInCart.map(item => { return <Item item={item} />;})}
 //             <Total itemsInCart={itemsInCart} />
 //             <Footer />
-            
+
 //         </div>
 //     );
 // }

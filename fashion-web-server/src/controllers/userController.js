@@ -34,6 +34,19 @@ export const getUserByQueryId = async (req, res) => {
   }
 };
 
+export const findUserByUsernameAndPassword = async (username, password) => {
+  try {
+    const user = await User.findOne({ username, password });
+    console.log(user);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return user;
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 // Tạo người dùng mới
 export const createUser = async (req, res) => {
   const user = new User(req.body);

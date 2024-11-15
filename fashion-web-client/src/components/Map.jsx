@@ -7,7 +7,7 @@
 // 	const defaultLocation = props.defaultLocation;
 // 	const setDefaultLocation = props.setDefaultLocation;
 // 	const setIsLoading = props.setIsLoading;
-	
+
 // 	const { isLoaded } = useLoadScript({
 // 		googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY,
 // 	});
@@ -22,7 +22,6 @@
 // 		setDefaultLocation(location);
 // 		setIsLoading(false);
 // 	};
-
 
 // 	if (!isLoaded) return (<Loading />)
 
@@ -42,7 +41,7 @@
 // }
 
 // export default React.memo(Map, (prevState, nextState) => {
-// 	const prevLocation = prevState.defaultLocation.location;	
+// 	const prevLocation = prevState.defaultLocation.location;
 // 	const nextLocation = nextState.defaultLocation.location;
 // 	return !(prevLocation.lat !== nextLocation.lat && prevLocation.lng !== nextLocation.lng);
 // })
