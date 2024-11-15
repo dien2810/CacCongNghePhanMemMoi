@@ -15,7 +15,6 @@ function NewCollection() {
       .find({ sortBy: "new", limit: 3, skip: 0 })
       .then((response) => {
         setItems(response.data);
-        console.log(response.data);
       })
       .catch((err) => console.log(err));
     // productApi
