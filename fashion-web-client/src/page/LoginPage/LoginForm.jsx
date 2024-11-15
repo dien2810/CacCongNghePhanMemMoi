@@ -2,6 +2,8 @@ import "../../assets/css/LoginForm.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { clientAPI } from "../../api/RestClient";
+import { useDispatch } from "react-redux";
+import { userSlice } from "../../redux/slice/UserSlice";
 
 function LoginForm(props) {
   const [username, setUsername] = useState("");
@@ -9,6 +11,7 @@ function LoginForm(props) {
   const [state, setState] = useState({ state: "init", message: "" });
   const setIsSignUp = props.setIsSignUp;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Hàm giả lập check login, thay cho API
   const checkLogin = async (e) => {
@@ -20,11 +23,11 @@ function LoginForm(props) {
     clientAPI
       .create({ username, password })
       .then((response) => {
-        console.log(response);
+        console.log(`response: ${response}`);
         //Storage token
         localStorage.setItem("accessToken", response.accessToken);
         localStorage.setItem("refreshToken", response.refreshToken);
-
+        localStorage.setItem("user", response.user);
         //Storage user and cart
         // cartApi.getCartByUsername(username).then((cart) => {
         //   dispatch(userSlice.actions.set(response.user));
@@ -32,6 +35,7 @@ function LoginForm(props) {
         //   setState({ ...state, state: "init", message: "" });
         //   navigate("/");
         // });
+        dispatch(userSlice.actions.set(response.user));
         setState({ ...state, state: "init", message: "" });
         navigate("/");
       })

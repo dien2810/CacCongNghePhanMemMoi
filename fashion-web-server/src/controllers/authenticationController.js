@@ -5,6 +5,7 @@ import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from "../../constants.js";
 import User from "../models/UserModel.js";
 import { findUserByUsernameAndPassword } from "./userController.js";
 import { checkFieldObject } from "../utils/CheckFieldObject.js";
+import jwt from "jsonwebtoken";
 export const login = async (req, res, next) => {
   if (
     !checkFieldObject(req.body, "username") ||
@@ -20,32 +21,41 @@ export const login = async (req, res, next) => {
   //Authentication
   findUserByUsernameAndPassword(username, password)
     .then((data) => {
-      console.log(data);
       if (!data) {
         res.status(400).send("Tên đăng nhập hoặc mật khẩu không đúng !");
         return;
       }
       const user = data;
-
       const accessToken = jwt.sign(
         { username: user.username },
         ACCESS_TOKEN_SECRET,
         { expiresIn: "30s" }
       );
-
       const refreshToken = jwt.sign(
         { username: user.username },
         REFRESH_TOKEN_SECRET,
         { expiresIn: "604800s" }
       ); // 7 days
-
       // Update refreshToken of that user
-      user.refreshToken.push(refreshToken);
-
+      user.refreshToken = refreshToken;
       //Store reresh token to database and send data to client
-      UserModel.updateUser(username, {
-        refreshToken: user.refreshToken,
-      }).then(() => res.json({ accessToken, refreshToken, user }));
+      User.updateOne(
+        { username: username },
+        {
+          user,
+        }
+      ).then(() =>
+        res.json({
+          accessToken,
+          refreshToken,
+          user: {
+            _id: user._id,
+            fullName: user.fullName,
+            image: user.image,
+            number: user.number,
+          },
+        })
+      );
     })
     .catch((err) => res.send(err));
 };
