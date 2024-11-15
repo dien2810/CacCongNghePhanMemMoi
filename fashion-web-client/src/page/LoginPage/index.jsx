@@ -44,7 +44,7 @@ function LoginPage(props) {
         <div style={{ marginTop: '25px' }}>
             <section>
                 <div className='container-1139'>
-                    <h1 className='logo'>Login</h1>
+                <h1 className='logo' style={{ fontFamily: 'Arial, sans-serif', fontSize: '24px' }}>NHÓM 06</h1>
                 </div>
             </section>
             <div className='loginform'>

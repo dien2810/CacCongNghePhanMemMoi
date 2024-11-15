@@ -11,7 +11,7 @@ function Header(props) {
     <header className="landing-page-header">
       {/* Header */}
       <div className="container-1139">
-        <div className="header-logo">LOGO</div>
+        <div className="header-logo">NHÓM 06</div>
         <ul className="menu">
           <li className="menu-item">
             <a href="#top" className="menu-link">

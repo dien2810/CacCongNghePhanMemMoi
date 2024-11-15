@@ -1,22 +1,42 @@
 import axiosClient from "./axiosClient";
 
-//Class cua REST Client co nhung phuong thuc: authentication, reAuthentication(), find(query), create(data), get(Id), patch(id, data), remove(id), service(path)
 class ProductApi {
-  getProducts = async (sortBy, limit, skip) => {
-    const params = { sortBy, limit, skip };
-    const url = "/products";
-    return axiosClient.get(url, { params });
-  };
+    // Lấy danh sách sản phẩm với các tùy chọn sắp xếp, giới hạn, và bỏ qua
+    async getProducts(_sortBy, _limit, _skip) {
+        try {
+            const params = { _sortBy, _limit, _skip };
+            const url = '/product/get';
+            const response = await axiosClient.get(url, { params });
+            return response.data;
+        } catch (error) {
+            console.error("Lỗi khi lấy danh sách sản phẩm:", error);
+            throw error;
+        }
+    }
 
-  getProductById = async (_id) => {
-    const url = `/product/${_id}/get`;
-    return axiosClient.get(url);
-  };
+    // Lấy sản phẩm theo ID
+    async getProductById(_id) {
+        try {
+            const url = `/product/${_id}/get`;
+            const response = await axiosClient.get(url);
+            return response.data;
+        } catch (error) {
+            console.error("Lỗi khi lấy sản phẩm theo ID:", error);
+            throw error;
+        }
+    }
 
-  getTotalProducts = async () => {
-    const url = "/product/getTotalProducts";
-    return axiosClient.get(url);
-  };
+    // Lấy tổng số sản phẩm
+    async getTotalProducts() {
+        try {
+            const url = '/product/getTotalProducts';
+            const response = await axiosClient.get(url);
+            return response.data;
+        } catch (error) {
+            console.error("Lỗi khi lấy tổng số sản phẩm:", error);
+            throw error;
+        }
+    }
 }
 
 const productApi = new ProductApi();
