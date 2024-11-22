@@ -25,11 +25,11 @@ export const getAllProduct = async (req, res) => {
     }
 
     // Đếm tổng số sản phẩm
-    const total = await ProductModel.countDocuments();
     var data = await ProductModel.find()
       .sort({ [sortField]: -1 }) // Sắp xếp giảm dần
       .skip(skip)
       .limit(limit);
+    const total = await data.length;
 
     return res.status(201).json({
       total,
@@ -44,8 +44,10 @@ export const getAllProduct = async (req, res) => {
 };
 // GET /products/:id
 export const getProductByParamID = async (req, res) => {
+  console.log("getProductByParamsID");
+  console.log(req.params);
   try {
-    const data = await ProductModel.findById(req.params.id);
+    const data = await ProductModel.find({ _id: req.params.id });
     if (!data) {
       return res.status(404).json({ message: "Product not found" });
     }

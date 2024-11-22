@@ -9,12 +9,12 @@ import { clientAPI } from "../../../api/RestClient";
 function OurProduct() {
   const id = useId();
   const [items, setItems] = useState([]);
-  const [pag, setPag] = useState({ start: 0, step: 3, tab: "hot" });
+  const [pag, setPag] = useState({ start: 0, step: 5, tab: "hot" });
 
   useEffect(() => {
     clientAPI.path = "/products";
     clientAPI
-      .find({ _sortBy: pag.tab, _limit: pag.step, _skip: pag.start })
+      .find({ sortBy: pag.tab, limit: pag.step, skip: pag.start })
       .then((response) => {
         setItems(response.data);
       })
@@ -30,7 +30,7 @@ function OurProduct() {
       <div className="container-1139 ourproduct-container">
         <h2 className="ourpoduct-heading">Our Product</h2>
         <Tab changeTab={changeTab} />
-        <Carousel rows={15} cols={4} hideArrow={true}>
+        <Carousel rows={3} cols={4} hideArrow={true}>
           {items.map((item) => (
             <Carousel.Item key={id}>
               <OurProductItem item={item} />

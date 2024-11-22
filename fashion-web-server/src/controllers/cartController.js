@@ -1,17 +1,17 @@
-import CartModel from "../models/cartModel.js";
+import CartModel from "../models/CartModel.js";
 
 // GET /cart
 export const getAllCartItem = async (req, res) => {
   try {
-    const userId = req.query.userId; // Lấy username từ query parameter
+    const username = req.query.username; // Lấy username từ query parameter
     let limit = parseInt(req.query.limit) || 10; // Số sản phẩm tối đa mỗi trang (mặc định là 10)
     let skip = parseInt(req.query.skip) || 0; // Số sản phẩm bỏ qua (pagination)
-    if (!userId) {
-      return res.status(400).json({ message: "userId is required" });
+    if (!username) {
+      return res.status(400).json({ message: "id is required" });
     }
 
     // Lấy danh sách sản phẩm trong giỏ hàng của người dùng
-    const itemsInCart = await CartModel.find({ userId })
+    const itemsInCart = await CartModel.find({ username })
       .sort({ ["createdAt"]: -1 })
       .skip(skip)
       .limit(limit);
@@ -21,7 +21,7 @@ export const getAllCartItem = async (req, res) => {
         totalItems: 0,
         data: [],
         totalPrice: 0,
-        user: userId,
+        username: username,
       });
     }
 
@@ -34,20 +34,28 @@ export const getAllCartItem = async (req, res) => {
       totalPrice += totalItemPrice;
 
       return {
+        id: item._id,
         itemId: item.itemId,
         productName: item.productName,
         quantity: item.quantity,
         price: item.price,
-        totalPrice: totalItemPrice,
         status: item.status,
+        totalPrice: totalItemPrice,
+        itemRev: item._rev,
+        size: item.size,
+        color: item.color,
+        image: item.image,
+        discount: item.discount,
+        category: item.category,
+        price: item.price,
       };
     });
     // Trả về JSON với thông tin chi tiết
     res.json({
       totalItems,
-      data,
+      data: data,
       totalPrice,
-      user: userId,
+      user: username,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -56,7 +64,7 @@ export const getAllCartItem = async (req, res) => {
 // GET /cart/:itemId
 export const getCartItemByParamID = async (req, res) => {
   try {
-    const data = await CartModel.findById(req.params.itemId);
+    const data = await CartModel.find({ _id: req.params.id });
     if (!data) {
       return res.status(404).json({ message: "Cart Item not found" });
     }
@@ -68,8 +76,8 @@ export const getCartItemByParamID = async (req, res) => {
 // GET /cart/?itemId=value
 export const getCartItemByQueryID = async (req, res) => {
   try {
-    const cartItemId = req.query.itemId;
-    const data = await CartModel.findOne({ itemId: cartItemId });
+    const id = req.query.id;
+    const data = await CartModel.find({ _id: id });
     if (!data) {
       return res.status(404).json({ message: "Cart Item not found" });
     }
@@ -78,14 +86,14 @@ export const getCartItemByQueryID = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-// GET /cart va GET /cart/?itemId=value
+// GET /cart va GET /cart/?username=value
 export const getCart = async (req, res) => {
-  const cartItemId = req.query.itemId;
+  const username = req.query.username;
   try {
-    if (cartItemId) {
-      await getCartItemByQueryID(req, res);
-    } else {
+    if (username) {
       await getAllCartItem(req, res);
+    } else {
+      await getCartItemByQueryID(req, res);
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -95,13 +103,16 @@ export const getCart = async (req, res) => {
 export const insertCartItem = async (req, res) => {
   const cartItem = new CartModel({
     itemId: req.body.itemId,
-    orderId: req.body.orderId,
+    username: req.body.username,
+    itemRev: req.body.itemRev,
     quantity: req.body.quantity,
+    size: req.body.size,
+    color: req.body.color,
     status: req.body.status,
     productName: req.body.productName,
-    price: req.body.price,
-    image: req.body.image,
     discount: req.body.discount,
+    image: req.body.image,
+    price: req.body.price,
   });
   try {
     const newCartItem = await cartItem.save();
@@ -113,10 +124,10 @@ export const insertCartItem = async (req, res) => {
 
 // PUT /cart
 export const updateCartItem = async (req, res) => {
-  const cartItemId = req.body.itemId;
+  const cartItemId = req.body.id;
   try {
     const updatedCartItem = await CartModel.findOneAndUpdate(
-      { itemId: cartItemId },
+      { _id: cartItemId },
       req.body,
       { new: true }
     );
@@ -131,7 +142,7 @@ export const updateCartItem = async (req, res) => {
 // DELETE /cart/:itemId
 export const deleteCartItemByParamId = async (req, res) => {
   try {
-    const cartItem = await CartModel.findByIdAndDelete(req.params.itemId);
+    const cartItem = await CartModel.findByIdAndDelete(req.params.id);
     if (!cartItem) {
       return res.status(404).json({ message: "Cart Item not found" });
     }
@@ -142,9 +153,9 @@ export const deleteCartItemByParamId = async (req, res) => {
 };
 // DELETE /cart/?itemId=value
 export const deleteCartItemByQueryId = async (req, res) => {
-  const cartItemId = req.query.itemId;
+  const cartItemId = req.query.id;
   try {
-    const cartItem = await CartModel.findOneAndDelete({ itemId: cartItemId });
+    const cartItem = await CartModel.findOneAndDelete({ _id: cartItemId });
     if (!cartItem) {
       return res.status(404).json({ message: "Cart Item not found" });
     }
