@@ -11,17 +11,13 @@ import { itemsSlice } from "../../redux/slice/ItemsSlice";
 function Item(props) {
   const item = props.item;
   const setDeleteItem = props.setDeleteItem;
-  console.log("Item:");
-  console.log(item);
-  console.log("setDeleteItem");
-  console.log(setDeleteItem);
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(item.quantity);
 
   const priceAfterDiscount = item.price - item.price * item.discount;
 
   //Caculate shipfee & price after changing quantity
-  const changeQuantity = (value) => {
+  const changeQuantity = (value = 0) => {
     let temp = quantity + value;
 
     // If changed quantity is greater than its quantity in stock,
@@ -42,7 +38,7 @@ function Item(props) {
       setDeleteItem(item);
       return;
     } else {
-      shipFeeChange = 12000;
+      shipFeeChange = 1000;
       quantityChange = temp;
     }
 
