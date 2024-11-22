@@ -103,7 +103,7 @@ class RestClient {
     try {
       const response = await this.axiosInstance.post(this.path, data);
       return response.data;
-    } catch (error) {
+    } catch (error) {   
       console.error("Error creating data:", error);
       throw error;
     }

@@ -14,7 +14,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/history" element={<HistoryPage />} />
-        {/* <Route path="/purchase" element={<PurchasedPage />} /> */}
+        <Route path="/purchase" element={<PurchasedPage />} />
       </Routes>
     </div>
   );
