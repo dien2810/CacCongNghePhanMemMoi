@@ -6,7 +6,6 @@ import { isEmptyObject } from "../../utils/index";
 import { Link } from "react-router-dom";
 function Header(props) {
   const user = useSelector(getUser);
-  console.log(`User selector: ${user}`);
   return (
     <header className="landing-page-header">
       {/* Header */}

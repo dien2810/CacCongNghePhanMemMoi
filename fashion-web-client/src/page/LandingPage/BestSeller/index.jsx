@@ -12,7 +12,6 @@ function BestSeller() {
     clientAPI
       .find({ sortBy: "hot", limit: 10, skip: 0 })
       .then((response) => {
-        console.log(`Item= ${items}`);
         setItems(response.data);
       })
       .catch((err) => console.log(err));

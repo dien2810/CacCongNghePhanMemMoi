@@ -53,6 +53,7 @@ export const login = async (req, res, next) => {
             fullName: user.fullName,
             image: user.image,
             number: user.number,
+            username: user.username,
           },
         })
       );
