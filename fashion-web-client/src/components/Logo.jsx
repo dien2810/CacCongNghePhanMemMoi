@@ -8,7 +8,7 @@ function Logo(props) {
 				className='container-1056 logo fixed'
 				style={{ paddingLeft: '109px', maxWidth: '100%' }}>
 				<Link to='/'>
-					<h2 className='logo-content'>LOGO</h2>
+					<h2 className='logo-content'>Nhóm 06</h2>
 				</Link>
 				{function () {
 					if (props.location !== '')

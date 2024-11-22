@@ -1,47 +1,46 @@
-// import Loading from './Loading';
-// import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
-// import { reverseGeocode } from '../utils';
-// import React from 'react';
+import React from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
 
-// function Map(props) {
-// 	const defaultLocation = props.defaultLocation;
-// 	const setDefaultLocation = props.setDefaultLocation;
-// 	const setIsLoading = props.setIsLoading;
+// Configure default Leaflet Marker icons
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+    iconUrl: require("leaflet/dist/images/marker-icon.png"),
+    shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+});
 
-// 	const { isLoaded } = useLoadScript({
-// 		googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY,
-// 	});
+function Map({ defaultLocation, setDefaultLocation }) {
+    const handleMarkerDragEnd = (event) => {
+        const lat = event.target.getLatLng().lat;
+        const lng = event.target.getLatLng().lng;
 
-// 	const onMarkerDragEnd = async (coord) => {
-// 		setIsLoading(true);
-// 		const { latLng } = coord;
-// 		const lat = latLng.lat();
-// 		const lng = latLng.lng();
-// 		const position = { lat, lng };
-//     	const location = await reverseGeocode(position);
-// 		setDefaultLocation(location);
-// 		setIsLoading(false);
-// 	};
+        // Update location state
+        setDefaultLocation((prev) => ({
+            ...prev,
+            location: { lat, lng },
+        }));
+    };
 
-// 	if (!isLoaded) return (<Loading />)
+    return (
+        <MapContainer
+            center={defaultLocation?.location || { lat: 10.762622, lng: 106.660172 }}
+            zoom={16}
+            style={{ height: "100%", width: "100%" }}
+        >
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <Marker
+                position={defaultLocation?.location || { lat: 10.762622, lng: 106.660172 }}
+                draggable={true}
+                eventHandlers={{
+                    dragend: handleMarkerDragEnd,
+                }}
+            >
+                <Popup>{defaultLocation?.address || "Unknown Location"}</Popup>
+            </Marker>
+        </MapContainer>
+    );
+}
 
-// 	return (
-// 		<GoogleMap
-// 			zoom={16}
-// 			center={defaultLocation.location}
-// 			mapContainerStyle={{ height: '100%', width: '100%' }}>
-// 			<Marker
-// 				position={defaultLocation.location}
-// 				draggable={true}
-// 				onDragEnd={(coord) => onMarkerDragEnd(coord)}
-// 				name={defaultLocation.address}
-// 			/>
-// 		</GoogleMap>
-// 	);
-// }
-
-// export default React.memo(Map, (prevState, nextState) => {
-// 	const prevLocation = prevState.defaultLocation.location;
-// 	const nextLocation = nextState.defaultLocation.location;
-// 	return !(prevLocation.lat !== nextLocation.lat && prevLocation.lng !== nextLocation.lng);
-// })
+export default Map;
