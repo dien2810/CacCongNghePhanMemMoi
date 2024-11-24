@@ -17,13 +17,6 @@ function NewCollection() {
         setItems(response.data);
       })
       .catch((err) => console.log(err));
-    // productApi
-    //   .getProducts("new", 3, 0)
-    //   .then((response) => {
-    //     setItems(response.data);
-    //     console.log(response.data);
-    //   })
-    //   .catch((err) => console.log(err));
   }, []);
   return (
     <div className="container-1139 newcollection-container">

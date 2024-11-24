@@ -1,4 +1,4 @@
-import "../../assets/css/Popup.css";
+import "../../assets/css/OrderPopup.css";
 import Star from "../Stars";
 import Loading from "../Loading";
 import SuccessPopup from "./SuccessPopup";
