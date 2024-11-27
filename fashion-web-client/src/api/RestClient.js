@@ -86,17 +86,18 @@ class RestClient {
   }
 
   // Gửi yêu cầu GET với query
-  async find(query = {}) {
-    try {
-      const response = await this.axiosInstance.get(this.path, {
-        params: query,
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error finding data:", error);
-      throw error;
-    }
+async find(query = {}) {
+  try {
+    const response = await this.axiosInstance.get(this.path, {
+      params: query,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error finding data:", error.response?.data || error.message);
+    throw error;
   }
+}
+
 
   // Gửi yêu cầu POST để tạo dữ liệu mới
   async create(data) {

@@ -1,13 +1,9 @@
 import { useDispatch } from "react-redux";
-import Loading from "../../components/Loading";
 import { itemsSlice } from "../../redux/slice/ItemsSlice";
+import { clientAPI } from "../../api/RestClient";
 import { useState } from "react";
-// import cartApi from "../../api/CartApi";
 
-function DeletePopup(props) {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const deleteItem = props.deleteItem;
-  const setDeleteItem = props.setDeleteItem;
+function DeletePopup({ deleteItem, setDeleteItem }) {
   const dispatch = useDispatch();
   const [state, setState] = useState("init");
 
@@ -15,21 +11,27 @@ function DeletePopup(props) {
     if (e.target.id === "children") setDeleteItem(null);
   };
 
-  const deleteItemInCart = () => {
+  const deleteItemInCart = async () => {
+    if (!deleteItem) return;
+
     setState("loading");
-    // cartApi
-    // 	.deleteProduct(user.username, deleteItem.itemId)
-    // 	.then(() => {
-    // 		setState('init');
-    // 		dispatch(itemsSlice.actions.deleteItemInCart({itemId: deleteItem.itemId}));
-    // 		setDeleteItem(null);
-    // 	})
-    // 	.catch(err => console.log(err))
+
+    try {
+      // Kiểm tra URL endpoint gửi đi
+      console.log("Deleting item with URL:", `/cart/${deleteItem.itemId}`);
+      await clientAPI.service("/cart").remove(deleteItem.id);
+
+      dispatch(itemsSlice.actions.deleteItemInCart({ itemId: deleteItem.itemId }));
+      setDeleteItem(null);
+    } catch (err) {
+      console.error("Lỗi khi xóa sản phẩm:", err);
+      setState("error");
+    } finally {
+      setState("init");
+    }
   };
 
-  if (!deleteItem) return;
-
-  if (state === "loading") return <Loading />;
+  if (!deleteItem) return null;
 
   return (
     <div className="uiewr">
@@ -40,7 +42,7 @@ function DeletePopup(props) {
         style={{ alignItems: "center", justifyContent: "space-evenly" }}
       >
         <div className="cart-page-delete-popup-container">
-          <h3>Bỏ sản phẩm này khỏi gỏ hàng ?</h3>
+          <h3>Bỏ sản phẩm này khỏi giỏ hàng?</h3>
           <p>{deleteItem.productName}</p>
           <div>
             <button onClick={() => setDeleteItem(null)}>KHÔNG</button>

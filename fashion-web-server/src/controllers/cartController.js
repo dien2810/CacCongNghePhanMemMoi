@@ -47,7 +47,6 @@ export const getAllCartItem = async (req, res) => {
         image: item.image,
         discount: item.discount,
         category: item.category,
-        price: item.price,
       };
     });
     // Trả về JSON với thông tin chi tiết
@@ -139,10 +138,11 @@ export const updateCartItem = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
 // DELETE /cart/:itemId
 export const deleteCartItemByParamId = async (req, res) => {
   try {
-    const cartItem = await CartModel.findByIdAndDelete(req.params.id);
+    const cartItem = await CartModel.findByIdAndDelete(req.params.itemId); // Xóa sản phẩm bằng `itemId`
     if (!cartItem) {
       return res.status(404).json({ message: "Cart Item not found" });
     }
@@ -151,6 +151,7 @@ export const deleteCartItemByParamId = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 // DELETE /cart/?itemId=value
 export const deleteCartItemByQueryId = async (req, res) => {
   const cartItemId = req.query.id;

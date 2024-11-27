@@ -65,7 +65,6 @@ function OrderPopup() {
         color: "Đen",
         image: item.image,
         discount: item.discount,
-        price: item.price,
       };
       clientAPI.path = "/cart";
       // cartApi

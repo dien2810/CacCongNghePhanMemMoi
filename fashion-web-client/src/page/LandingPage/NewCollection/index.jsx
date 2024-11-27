@@ -14,10 +14,17 @@ function NewCollection() {
     clientAPI
       .find({ sortBy: "new", limit: 3, skip: 0 })
       .then((response) => {
-        setItems(response.data);
+        if (Array.isArray(response.data)) {
+          setItems(response.data); // Chỉ set dữ liệu nếu nó là một mảng
+        } else {
+          console.error("Dữ liệu trả về không hợp lệ:", response.data);
+          setItems([]); // Gán giá trị mặc định
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error("Lỗi khi gọi API:", err));
   }, []);
+  
+  
   return (
     <div className="container-1139 newcollection-container">
       <div className="heading">New Collection</div>

@@ -6,7 +6,6 @@ import Item from "./item";
 import Footer from "../../components/Footer";
 import { useSelector } from "react-redux";
 import { getUser, getItemsInCart } from "../../redux/selectors";
-import Category from "./category";
 import { useState } from "react";
 import DeletePopup from "../PurchasedPage/deletepopup";
 
@@ -21,10 +20,9 @@ function CartPage() {
       <Logo location="Giỏ hàng" />
       <div style={{ minHeight: "calc(100vh - 450px)" }}>
         <section className="container-1056" style={{ flexDirection: "column" }}>
-          <Category />
-          {itemsInCart.map((item) => {
-            return <Item item={item} setDeleteItem={setDeleteItem} />;
-          })}
+          {itemsInCart.map((item) => (
+            <Item key={item.itemId} item={item} setDeleteItem={setDeleteItem} />
+          ))}
         </section>
         <Total />
       </div>

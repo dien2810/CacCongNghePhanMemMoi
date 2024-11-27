@@ -1,8 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+let items;
+try {
+  const rawItems = localStorage.getItem("items");
+  items = rawItems ? JSON.parse(rawItems) : []; // Kiểm tra và sử dụng mảng rỗng nếu không có dữ liệu
+} catch (error) {
+  console.error("Dữ liệu trong localStorage không hợp lệ:", error);
+  items = []; // Gán giá trị mặc định
+  localStorage.setItem("items", JSON.stringify(items)); // Ghi lại giá trị hợp lệ
+}
+
+// Khởi tạo state ban đầu
 const initState = {
-  userItems: JSON.parse(localStorage.getItem("items")),
-  numberItems: 0,
+  userItems: items,
+  numberItems: items.length || 0, // Số lượng items
   popupItem: null,
 };
 
@@ -11,38 +22,34 @@ export const itemsSlice = createSlice({
   initialState: initState,
   reducers: {
     setUserItems: (state, action) => {
-      // Set items in redux store and local storage
       localStorage.setItem("items", JSON.stringify(action.payload));
       state.userItems = action.payload;
     },
 
-    deleteUserItems: (state, action) => {
-      localStorage.setItem("items", null);
-      state.userItems = null;
+    deleteUserItems: (state) => {
+      localStorage.setItem("items", JSON.stringify([])); // Đặt lại mảng rỗng
+      state.userItems = [];
     },
+    
 
     setPopupItem: (state, action) => {
       state.popupItem = action.payload;
     },
 
-    deletePopupItem: (state, action) => {
+    deletePopupItem: (state) => {
       state.popupItem = null;
     },
 
     userItemsUpdateQuantity: (state, action) => {
-      // Get information from action.payload
-      const itemId = action.payload.itemId;
-      const quantity = action.payload.quantity;
-      const shipFee = action.payload.shipFee;
-
-      //Update quantity and shipfee to items in redux store and local storage
+      const { itemId, quantity, shipFee } = action.payload;
       const index = state.userItems.findIndex(
         (item) => item.itemId === itemId && item.status === "in_cart"
       );
-      state.userItems[index].quantity = quantity;
-      state.userItems[index].shipFee = shipFee;
-
-      localStorage.setItem("items", JSON.stringify(state.userItems));
+      if (index !== -1) {
+        state.userItems[index].quantity = quantity;
+        state.userItems[index].shipFee = shipFee;
+        localStorage.setItem("items", JSON.stringify(state.userItems));
+      }
     },
 
     setNumberItems: (state, action) => {
@@ -50,13 +57,11 @@ export const itemsSlice = createSlice({
     },
 
     deleteItemInCart: (state, action) => {
-      state.userItems = state.userItems.filter(
+      const updatedItems = state.userItems.filter(
         (item) => item.itemId !== action.payload.itemId
       );
-      let user = JSON.parse(localStorage.getItem("user"));
-      user = { ...user, items: state.userItems };
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("items", JSON.stringify(state.userItems));
-    },
+      state.userItems = updatedItems;
+      localStorage.setItem("items", JSON.stringify(updatedItems));
+    }    
   },
 });

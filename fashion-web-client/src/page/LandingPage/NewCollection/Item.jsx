@@ -2,8 +2,13 @@ import { useDispatch } from "react-redux";
 import { itemsSlice } from "../../../redux/slice/ItemsSlice.js";
 
 function NewCollectionItem(props) {
-  const item = props.item;
+  const { item } = props;
   const dispatch = useDispatch();
+
+  if (!item) {
+    console.error("Dữ liệu item không hợp lệ:", item);
+    return null;
+  }
 
   return (
     <div
@@ -16,3 +21,4 @@ function NewCollectionItem(props) {
   );
 }
 export default NewCollectionItem;
+
