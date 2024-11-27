@@ -1,5 +1,5 @@
 import User from "../models/UserModel.js";
-
+import ProductModel from "../models/ProductModel.js";
 // Lấy tất cả người dùng
 export const getAllUsers = async (req, res) => {
   try {
@@ -97,6 +97,51 @@ export const deleteUserByQueryId = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     res.json({ message: "User deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const order = async (req, res) => {
+  try {
+    console.log(req.body);
+    const username = req.body.username;
+    const cart = req.body.cart;
+    const user = await User.find({ username }); // Tìm và xóa người dùng theo id
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    for (var i in cart) {
+      let product = await ProductModel.find({ itemId: cart[i].itemId });
+      let stockQuantity = product.stockQuantity;
+      if (cart[i].quantity > stockQuantity) {
+        return res.status(404).json({
+          message: `Sản phẩm ${cart[i].productName} đang vượt quá số lượng trong kho`,
+        });
+      }
+    }
+
+    for (var i in cart) {
+      const index = items.findIndex(
+        (item) => item.status === "in_cart" && item.itemId === cart[i].itemId
+      );
+
+      // If there is an item having the quantity equal 0, skip it
+      if (cart[i].quantity === 0) {
+        items.splice(index, 1);
+        continue;
+      }
+
+      items[index].quantity = cart[i].quantity;
+      items[index].status = "on_shipping";
+      await ProductModel.updateOne(
+        { _id: cart[i].itemId },
+        { stockQuantity: stockQuantity - cart[i].quantity }
+      );
+    }
+    await UserModel.updateUser(username, { items: items });
+    res.json({ items });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

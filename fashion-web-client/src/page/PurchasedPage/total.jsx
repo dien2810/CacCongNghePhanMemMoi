@@ -13,6 +13,7 @@ function Total() {
   const dispatch = useDispatch();
   const user = useSelector(getUser);
   const cart = useSelector(getItemsInCart);
+  console.log(cart);
   const shopLocation = JSON.parse(localStorage.getItem("shopLocation")) || {
     location: { lat: 0, lng: 0 },
   };
@@ -53,23 +54,34 @@ function Total() {
 
     try {
       // Gọi API tạo đơn hàng
-      await clientAPI.service("/orders").create({
-        username: user.username,
-        items: cart,
-      });
+      clientAPI.path = "/users/orders";
+      await clientAPI
+        .patch("", {
+          username: user.username,
+          items: cart,
+        })
+        .then((response) => {
+          dispatch(itemsSlice.actions.setUserItems(response));
+          setState({
+            ...state,
+            state: "success",
+            message: "Đặt hàng thành công",
+            closePopup: closePopup,
+          });
+        });
 
       // Lấy lại danh sách giỏ hàng sau khi đặt hàng
-      const updatedCart = await clientAPI
-        .service("/cart")
-        .find({ username: user.username });
-      dispatch(itemsSlice.actions.setUserItems(updatedCart));
+      // const updatedCart = await clientAPI
+      //   .service("/cart")
+      //   .find({ username: user.username });
+      // dispatch(itemsSlice.actions.setUserItems(updatedCart));
 
-      setState({
-        ...state,
-        state: "success",
-        message: "Đặt hàng thành công!",
-        closePopup: closePopup,
-      });
+      // setState({
+      //   ...state,
+      //   state: "success",
+      //   message: "Đặt hàng thành công!",
+      //   closePopup: closePopup,
+      // });
     } catch (err) {
       console.error("Error placing order:", err);
       setState({

@@ -94,7 +94,7 @@ function OrderPopup() {
           setOrderState({
             ...orderState,
             state: "error",
-            message: err.message,
+            message: "Sản phẩm đã có trong giỏ hàng",
             closePopup: closePopup,
           })
         );

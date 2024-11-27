@@ -4,7 +4,6 @@ const cartSchema = new Schema(
   {
     itemId: {
       type: String,
-      require: true,
       // validate: {
       //   validator: function (value) {
       //     return Number.isInteger(value) || value == undefined;

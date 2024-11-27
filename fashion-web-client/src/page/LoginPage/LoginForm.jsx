@@ -4,6 +4,7 @@ import { useState } from "react";
 import { clientAPI } from "../../api/RestClient";
 import { useDispatch } from "react-redux";
 import { userSlice } from "../../redux/slice/UserSlice";
+import ErrorPopup from "../../components/Popup/ErrorPopup";
 
 function LoginForm(props) {
   const [username, setUsername] = useState("");
@@ -24,23 +25,31 @@ function LoginForm(props) {
       .create({ username, password })
       .then((response) => {
         console.log(`response: ${response}`);
-        //Storage token
-        localStorage.setItem("accessToken", response.accessToken);
-        localStorage.setItem("refreshToken", response.refreshToken);
-        localStorage.setItem("user", response.user);
-        //Storage user and cart
-        // cartApi.getCartByUsername(username).then((cart) => {
-        //   dispatch(userSlice.actions.set(response.user));
-        //   dispatch(itemsSlice.actions.setUserItems(cart));
-        //   setState({ ...state, state: "init", message: "" });
-        //   navigate("/");
-        // });
-        dispatch(userSlice.actions.set(response.user));
-        setState({ ...state, state: "init", message: "" });
-        navigate("/");
+        if (response.accessToken && response.refreshToken && response.user) {
+          //Storage token
+          localStorage.setItem("accessToken", response.accessToken);
+          localStorage.setItem("refreshToken", response.refreshToken);
+          localStorage.setItem("user", response.user);
+          //Storage user and cart
+          // cartApi.getCartByUsername(username).then((cart) => {
+          //   dispatch(userSlice.actions.set(response.user));
+          //   dispatch(itemsSlice.actions.setUserItems(cart));
+          //   setState({ ...state, state: "init", message: "" });
+          //   navigate("/");
+          // });
+          dispatch(userSlice.actions.set(response.user));
+          setState({ ...state, state: "init", message: "" });
+          navigate("/");
+        } else {
+          setState({
+            ...state,
+            state: "error",
+            message: "Tên đăng nhập hoặc mật khẩu không đúng",
+          });
+        }
       })
       .catch((err) => {
-        setState({ ...state, state: "error", message: err.response.data });
+        setState({ ...state, state: "error", message: err.message });
       });
 
     // // Giả lập quá trình đăng nhập
