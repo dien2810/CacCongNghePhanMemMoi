@@ -65,7 +65,6 @@ function OrderPopup() {
         color: "Đen",
         image: item.image,
         discount: item.discount,
-        price: item.price,
       };
       clientAPI.path = "/cart";
       // cartApi
@@ -95,7 +94,7 @@ function OrderPopup() {
           setOrderState({
             ...orderState,
             state: "error",
-            message: err.message,
+            message: "Sản phẩm đã có trong giỏ hàng",
             closePopup: closePopup,
           })
         );

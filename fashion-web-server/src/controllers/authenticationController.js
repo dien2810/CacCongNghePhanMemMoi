@@ -6,6 +6,19 @@ import User from "../models/UserModel.js";
 import { findUserByUsernameAndPassword } from "./userController.js";
 import { checkFieldObject } from "../utils/CheckFieldObject.js";
 import jwt from "jsonwebtoken";
+
+const defaultLocation = {
+  country: " Vietnam",
+  province: " Tien Giang",
+  district: " Cai Lậy District",
+  ward: " Thạnh Lộc",
+  address: "G259+X75",
+  location: {
+    lat: 10.509862,
+    lng: 106.0182,
+  },
+};
+
 export const login = async (req, res, next) => {
   if (
     !checkFieldObject(req.body, "username") ||
@@ -21,7 +34,8 @@ export const login = async (req, res, next) => {
   //Authentication
   findUserByUsernameAndPassword(username, password)
     .then((data) => {
-      if (!data) {
+      console.log(data);
+      if (data == null) {
         res.status(400).send("Tên đăng nhập hoặc mật khẩu không đúng !");
         return;
       }
@@ -129,20 +143,21 @@ export const createUser = async (req, res, next) => {
   }
 
   // Check if username is existed
-  const isUsernameExisted = await UserModel.isUsernameExisted(username);
+  const data = await User.findOne({ username: username });
+  const isUsernameExisted = data ? true : false;
   if (isUsernameExisted) {
     res.status(400).send("Tên đăng nhập đã tồn tại!");
     return;
   }
-
-  UserModel.insertNewUser({
+  console.log("Dang ky");
+  await User.create({
     username: username,
     password: password,
     fullname: username,
     image:
       "https://scr.vn/wp-content/uploads/2020/07/Avatar-Facebook-tr%E1%BA%AFng.jpg",
     number: "",
-    refreshToken: [],
+    refreshToken: "",
     items: [],
     location: defaultLocation,
   })

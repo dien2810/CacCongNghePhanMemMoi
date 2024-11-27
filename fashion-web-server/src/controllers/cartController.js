@@ -114,6 +114,7 @@ export const insertCartItem = async (req, res) => {
     image: req.body.image,
     price: req.body.price,
   });
+  console.log(cartItem);
   try {
     const newCartItem = await cartItem.save();
     res.status(201).json(newCartItem);

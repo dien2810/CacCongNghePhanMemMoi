@@ -2,7 +2,6 @@ import express from "express";
 import {
   getAllUsers,
   getUserById,
-  createUser,
   updateUser,
   deleteUser,
   getUserByQueryId,
@@ -12,6 +11,7 @@ import {
   login,
   logout,
   refreshToken,
+  createUser,
 } from "../controllers/authenticationController.js";
 import { authenToken } from "../../authen.js";
 
