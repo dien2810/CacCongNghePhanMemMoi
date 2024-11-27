@@ -11,6 +11,7 @@ import { getUser } from "../../redux/selectors";
 import { userSlice } from "../../redux/slice/UserSlice";
 import { itemsSlice } from "../../redux/slice/ItemsSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { clientAPI } from "../../api/RestClient";
 // import userApi from "../../api/UserApi";
 
 function HistoryPage() {
@@ -20,12 +21,13 @@ function HistoryPage() {
   const [option, setOption] = useState("my-account");
 
   const logout = () => {
-    // userApi.logout(user.username).then(() => {
-    //   dispatch(itemsSlice.actions.setUserItems(null));
-    //   dispatch(userSlice.actions.delete());
-    //   localStorage.clear();
-    //   navigate("/");
-    // });
+    clientAPI.path = "auth/logout";
+    clientAPI.create({ username: user.username }).then((response) => {
+      dispatch(itemsSlice.actions.setUserItems(null));
+      dispatch(userSlice.actions.delete());
+      localStorage.clear();
+      navigate("/");
+    });
   };
 
   return (

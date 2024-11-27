@@ -1,6 +1,9 @@
 import "../../assets/css/Document.css";
+import { getUser } from "../../redux/selectors";
+import { useSelector } from "react-redux";
 
 function Information() {
+  const user = useSelector(getUser);
   return (
     <div className="document">
       <div className="document-heading">Hồ Sơ Của Tôi</div>
@@ -14,7 +17,7 @@ function Information() {
               <label>Tên đăng nhập</label>
             </div>
             <div className="gVdPk">
-              <div className="Z1Wx1m">khanhprolazay</div>
+              <div className="Z1Wx1m">{user.username}</div>
             </div>
           </div>
         </div>
@@ -30,7 +33,7 @@ function Information() {
                   type="text"
                   placeholder
                   className="y-NK4C"
-                  value="Lê Minh"
+                  value={user.username}
                 />
               </div>
             </div>
