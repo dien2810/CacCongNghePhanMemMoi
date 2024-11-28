@@ -6,6 +6,7 @@ import User from "../models/UserModel.js";
 import { findUserByUsernameAndPassword } from "./userController.js";
 import { checkFieldObject } from "../utils/CheckFieldObject.js";
 import jwt from "jsonwebtoken";
+import CartModel from "../models/CartModel.js";
 
 const defaultLocation = {
   country: " Vietnam",
@@ -30,6 +31,7 @@ export const login = async (req, res, next) => {
 
   const username = req.body.username;
   const password = req.body.password;
+  
 
   //Authentication
   findUserByUsernameAndPassword(username, password)
@@ -64,11 +66,12 @@ export const login = async (req, res, next) => {
           refreshToken,
           user: {
             _id: user._id,
-            fullName: user.fullName,
+            fullname: user.fullname,
             image: user.image,
             number: user.number,
             username: user.username,
           },
+          items: user.items
         })
       );
     })

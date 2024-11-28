@@ -83,3 +83,28 @@
     font-size: .875rem !important;
     color: #333 !important;
 }
+
+.btn-save {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #4CAF50; /* Màu xanh lá */
+    border: none;
+    border-radius: 5px; /* Bo góc nút */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase; /* Chữ in hoa */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tạo hiệu ứng bóng */
+}
+
+.btn-save:hover {
+    background-color: #45a049; /* Màu khi hover */
+    transform: scale(1.05); /* Hiệu ứng phóng to nhẹ khi hover */
+}
+
+.btn-save:active {
+    background-color: #3e8e41; /* Màu khi bấm */
+    transform: scale(0.98); /* Hiệu ứng thu nhỏ nhẹ khi bấm */
+}

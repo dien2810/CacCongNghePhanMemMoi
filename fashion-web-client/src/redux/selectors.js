@@ -1,8 +1,8 @@
 import { createSelector } from "@reduxjs/toolkit";
 
-export const getUser = (state) => state.user;
+export const getUser = (state) => state.user || {};
 
-export const getUserItems = (state) => state.items.userItems;
+//export const getUserItems = (state) => state.items.userItems;
 
 export const getHotItems = (state) => state.items.hotItems;
 
@@ -19,6 +19,11 @@ export const getNumberOfAllItems = (state) => state.items.numberItems;
 export const getFilterByStatus = (state) => state.filter.byStatus;
 
 export const getUserLocation = (state) => state.user.location;
+
+export const getUserItems = (state) => {
+  return Array.isArray(state.items.userItems) ? state.items.userItems : [];
+};
+
 
 export const getNumberOfItemsInCart = createSelector(getUserItems, (items) => {
   return items === null

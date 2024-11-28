@@ -12,8 +12,8 @@ try {
 
 // Khởi tạo state ban đầu
 const initState = {
-  userItems: items,
-  numberItems: items.length || 0, // Số lượng items
+  userItems: Array.isArray(items) ? items : [], // Đảm bảo `items` luôn là mảng
+  numberItems: Array.isArray(items) ? items.length : 0,
   popupItem: null,
 };
 
@@ -22,8 +22,10 @@ export const itemsSlice = createSlice({
   initialState: initState,
   reducers: {
     setUserItems: (state, action) => {
-      localStorage.setItem("items", JSON.stringify(action.payload));
-      state.userItems = action.payload;
+      
+      const newItems = action.payload || []; // Kiểm tra null và gán mảng rỗng nếu không có payload
+      localStorage.setItem("items", JSON.stringify(newItems));
+      state.userItems = newItems;
     },
 
     deleteUserItems: (state) => {

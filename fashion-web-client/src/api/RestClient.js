@@ -124,16 +124,14 @@ async find(query = {}) {
   // Cập nhật một object qua ID
   async patch(objectId, data) {
     try {
-      const response = await this.axiosInstance.patch(
-        `${this.path}/${objectId}`,
-        data
-      );
+      const response = await this.axiosInstance.patch(`${this.path}/${objectId}`, data);
       return response.data;
     } catch (error) {
       console.error("Error patching data:", error);
       throw error;
     }
   }
+  
 
   // Xóa một object qua ID
   async remove(objectId) {

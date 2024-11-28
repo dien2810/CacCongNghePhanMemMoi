@@ -62,14 +62,16 @@ export const createUser = async (req, res) => {
 // Cập nhật thông tin người dùng
 export const updateUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params.id); // Tìm user theo ID
     if (!user) return res.status(404).json({ message: "User not found" });
 
+    // Gộp dữ liệu mới từ body request
     Object.assign(user, req.body);
-    const updatedUser = await user.save();
+    const updatedUser = await user.save(); // Lưu thay đổi
     res.json({
       id: updatedUser.id,
-      fullName: updatedUser.fullname,
+      fullname: updatedUser.fullname,
+      number: updatedUser.number,
     });
   } catch (err) {
     res.status(400).json({ message: err.message });

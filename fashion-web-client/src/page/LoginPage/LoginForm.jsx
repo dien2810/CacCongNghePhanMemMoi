@@ -26,6 +26,7 @@ function LoginForm(props) {
       .then((response) => {
         if (response.accessToken && response.refreshToken && response.user) {
           //Storage token
+          localStorage.setItem("items", response.items);
           localStorage.setItem("accessToken", response.accessToken);
           localStorage.setItem("refreshToken", response.refreshToken);
           localStorage.setItem("user", response.user);
@@ -50,19 +51,6 @@ function LoginForm(props) {
       .catch((err) => {
         setState({ ...state, state: "error", message: err.message });
       });
-
-    // // Giả lập quá trình đăng nhập
-    // setTimeout(() => {
-    // 	if (username === 'test' && password === '1234') {
-    // 		// Đăng nhập thành công
-    // 		setState({ ...state, state: 'success', message: 'Đăng nhập thành công!' });
-    // 		// Điều hướng đến trang chủ
-    // 		navigate('/');
-    // 	} else {
-    // 		// Đăng nhập thất bại
-    // 		setState({ ...state, state: 'error', message: 'Sai tên đăng nhập hoặc mật khẩu.' });
-    // 	}
-    // }, 1000); // Giả lập thời gian chờ
   };
 
   const onChangeUsername = (event) => {
