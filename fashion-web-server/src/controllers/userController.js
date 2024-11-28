@@ -1,5 +1,6 @@
 import User from "../models/UserModel.js";
 import ProductModel from "../models/ProductModel.js";
+import CartModel from "../models/CartModel.js";
 // Lấy tất cả người dùng
 export const getAllUsers = async (req, res) => {
   try {
@@ -106,42 +107,42 @@ export const order = async (req, res) => {
   try {
     console.log(req.body);
     const username = req.body.username;
-    const cart = req.body.cart;
-    const user = await User.find({ username }); // Tìm và xóa người dùng theo id
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const cartReq = req.body.cart;
+    const cart = await CartModel.find({ username });
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
     }
-
-    for (var i in cart) {
-      let product = await ProductModel.find({ itemId: cart[i].itemId });
+    // let items = user.items;
+    for (var i in cartReq) {
+      let product = await ProductModel.find({ itemId: cartReq[i].itemId });
       let stockQuantity = product.stockQuantity;
-      if (cart[i].quantity > stockQuantity) {
+      if (cartReq[i].quantity > stockQuantity) {
         return res.status(404).json({
-          message: `Sản phẩm ${cart[i].productName} đang vượt quá số lượng trong kho`,
+          message: `Sản phẩm ${cartReq[i].productName} đang vượt quá số lượng trong kho`,
         });
       }
     }
 
-    for (var i in cart) {
-      const index = items.findIndex(
+    for (var i in cartReq) {
+      const index = cart.findIndex(
         (item) => item.status === "in_cart" && item.itemId === cart[i].itemId
       );
 
       // If there is an item having the quantity equal 0, skip it
-      if (cart[i].quantity === 0) {
-        items.splice(index, 1);
+      if (cartReq[i].quantity === 0) {
+        cart.splice(index, 1);
         continue;
       }
 
-      items[index].quantity = cart[i].quantity;
-      items[index].status = "on_shipping";
+      cart[index].quantity = cartReq[i].quantity;
+      cart[index].status = "on_shipping";
       await ProductModel.updateOne(
         { _id: cart[i].itemId },
         { stockQuantity: stockQuantity - cart[i].quantity }
       );
     }
-    await UserModel.updateUser(username, { items: items });
-    res.json({ items });
+    await User.findOneAndUpdate({ username }, { items: cart });
+    res.json(cart);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

@@ -7,11 +7,11 @@ export const getAllCartItem = async (req, res) => {
     let limit = parseInt(req.query.limit) || 10; // Số sản phẩm tối đa mỗi trang (mặc định là 10)
     let skip = parseInt(req.query.skip) || 0; // Số sản phẩm bỏ qua (pagination)
     if (!username) {
-      return res.status(400).json({ message: "id is required" });
+      return res.status(400).json({ message: "username is required" });
     }
 
     // Lấy danh sách sản phẩm trong giỏ hàng của người dùng
-    const itemsInCart = await CartModel.find({ username })
+    const itemsInCart = await CartModel.find({ username: username })
       .sort({ ["createdAt"]: -1 })
       .skip(skip)
       .limit(limit);

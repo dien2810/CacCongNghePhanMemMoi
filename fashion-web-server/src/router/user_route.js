@@ -30,7 +30,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", getUserById); // Lấy người dùng theo ID
 router.post("/", createUser); // Tạo người dùng mới
 router.put("/:id", updateUser); // Cập nhật thông tin người dùng
-router.put("/order", order); // Cập nhật thông tin người dùng
+router.patch("/orders", order); // Cập nhật thông tin người dùng
 router.delete("/", deleteUserByQueryId); // Xóa người dùng theo query id
 router.delete("/:id", deleteUser); // Xóa người dùng theo ID
 

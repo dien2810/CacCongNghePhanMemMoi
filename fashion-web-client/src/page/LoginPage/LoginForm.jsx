@@ -24,7 +24,6 @@ function LoginForm(props) {
     clientAPI
       .create({ username, password })
       .then((response) => {
-        console.log(`response: ${response}`);
         if (response.accessToken && response.refreshToken && response.user) {
           //Storage token
           localStorage.setItem("accessToken", response.accessToken);

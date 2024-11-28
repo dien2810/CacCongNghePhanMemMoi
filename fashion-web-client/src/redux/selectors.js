@@ -48,8 +48,10 @@ export const getItemsRemainingAfterFilter = createSelector(
   getUserItems,
   getFilterByStatus,
   (items, filterByStatus) => {
-    return filterByStatus === "all"
-      ? items
-      : items.filter((item) => item.status === filterByStatus);
+    if (items) {
+      return filterByStatus === "all"
+        ? items
+        : items.filter((item) => item.status === filterByStatus);
+    } else return [];
   }
 );

@@ -13,7 +13,6 @@ function Total() {
   const dispatch = useDispatch();
   const user = useSelector(getUser);
   const cart = useSelector(getItemsInCart);
-  console.log(cart);
   const shopLocation = JSON.parse(localStorage.getItem("shopLocation")) || {
     location: { lat: 0, lng: 0 },
   };
@@ -51,7 +50,6 @@ function Total() {
 
   const order = async () => {
     setState({ ...state, state: "loading", closePopup: () => true });
-
     try {
       // Gọi API tạo đơn hàng
       clientAPI.path = "/users/orders";

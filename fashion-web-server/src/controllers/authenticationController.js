@@ -83,7 +83,7 @@ export const logout = (req, res, next) => {
     return;
   }
   const username = req.body.username;
-  UserModel.deleteRefreshTokenByUsername(username)
+  User.findOneAndUpdate({ username }, { refreshToken: "" })
     .then(() => res.sendStatus(200))
     .catch((err) => res.send(err));
 };
