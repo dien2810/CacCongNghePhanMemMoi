@@ -38,7 +38,7 @@ function HistoryPage() {
         <div className="history-menu-wrapper">
           <div className="history-avatar-wrapper">
             <img src={user.image} alt="category-avatar" />
-            <p>{user.username}</p>
+            <p>{user.fullname}</p>
           </div>
           <Menu setOption={setOption} logout={logout} />
         </div>
